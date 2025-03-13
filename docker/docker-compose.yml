@@ -1,0 +1,17 @@
+services:
+  postgres: 
+    image: postgres
+    container_name: postgres_compose
+    restart: always
+    environment:
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: its
+      POSTGRES_DB: api
+      PGUSER: postgres
+    ports:
+      - "5434:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+      
+volumes:
+  postgres_data:
