@@ -1,6 +1,8 @@
 services:
   backend: 
-    image: backend:1.2
+    image: tarmairon24/backend:1.2
+    container_name: backend
+    restart: always
     environment:
       DB_HOST: postgres
       DB_PORT: 5432

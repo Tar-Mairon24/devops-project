@@ -15,6 +15,7 @@ const getUsers = (request, response) => {
         if (error) {
             throw error
         }
+        console.log('Metod GET: getUsers response: ', results. rows)
         response.status(200).json(results.rows)
     })
 }

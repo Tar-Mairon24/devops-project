@@ -1,7 +1,7 @@
 services:
   postgres: 
     image: postgres
-    container_name: postgres_compose
+    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres 
@@ -12,6 +12,8 @@ services:
       - "5434:5432"
     volumes: 
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
       
 volumes:
   postgres_data:
