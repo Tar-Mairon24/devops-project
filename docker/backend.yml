@@ -1,0 +1,17 @@
+services:
+  backend: 
+    image: backend:1.2
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: its
+      DB_NAME: api
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
