@@ -10,11 +10,33 @@ read -p "Enter the service to redeploy: " service
 
 case "$service" in
     1)
-        echo "Redeploying frontend..."
-        docker-compose -f docker/frontend.yml up -d --build
-        if [ $? -ne 0 ]; then
-            echo "Failed to redeploy frontend"
+        if [ ! -f docker/frontend.yml ]; then
+            echo "Frontend manifest not found"
             exit 1
+        fi
+        # if [ ! -f CN_React/Dockerfile ]; then
+        #     echo "Frontend Dockerfile not found"
+        #     exit 2
+        # fi
+        ./scripts/validarContenedor.sh frontend
+        exit_code=$?
+        if [ $? -eq 2 ]; then
+            echo "Multiple frontend containers found"
+            exit 3
+        fi
+        if [ $exit_code -eq 2 ]; then
+            echo "Multiple frontend containers found"
+            exit 3
+        fi
+        if [ $exit_code -eq 1 ]; then
+            echo "Stopping frontend..."
+            docker compose -f docker/frontend.yml down
+            echo "Redeploying frontend..."
+            docker compose -f docker/frontend.yml up -d --build
+            if [ $? -ne 0 ]; then
+                echo "Failed to redeploy frontend"
+                exit 4
+            fi
         fi
         ;;
     2)

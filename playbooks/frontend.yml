@@ -1,0 +1,20 @@
+- name: Instalar y configurar el frontend
+  hosts: servers
+  become: yes
+
+  tasks: 
+    - name: Instalar Nginx
+      apt:
+        update: yes
+        upgrade: yes
+        #update_cache: yes
+
+      apt:
+        name: nginx 
+        state: latest
+
+    - name: Iniciar y habilitar Nginx 
+      service: 
+        name: nginx 
+        state: started
+        enabled: yes
