@@ -11,7 +11,7 @@ function InputPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/users', {
+      const response = await fetch('http://129.80.95.120/users', {
         'method': 'POST',
         'mode': 'cors',
         'headers': {
