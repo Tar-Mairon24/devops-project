@@ -69,6 +69,12 @@
       args:
         chdir: /var/www/frontend
 
+    - name: Open port 80 using iptables
+      become: yes
+      ansible.builtin.shell: |
+        iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+        iptables-save > /etc/iptables/rules.v4
+
   handlers:
     - name: Restart Nginx
       ansible.builtin.service:

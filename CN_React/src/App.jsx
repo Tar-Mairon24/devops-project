@@ -4,7 +4,7 @@ import './App.css'
 function App() {
   const [data, setData] = useState(null);
   useEffect(()=> {
-    fetch("http://localhost:3000/users",{ 
+    fetch("http://129.80.95.120:3000/users",{ 
       'mode': 'cors',
       'headers': {
           'Access-Control-Allow-Origin': '*',
