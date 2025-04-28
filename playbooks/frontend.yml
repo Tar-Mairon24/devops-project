@@ -1,20 +1,68 @@
 - name: Instalar y configurar el frontend
-  hosts: servers
+  hosts: server2
   become: yes
 
   tasks: 
-    - name: Instalar Nginx
-      apt:
-        update: yes
-        upgrade: yes
-        #update_cache: yes
 
-      apt:
-        name: nginx 
-        state: latest
+    - name: Add Node.js repository
+      ansible.builtin.shell: |
+        curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
-    - name: Iniciar y habilitar Nginx 
-      service: 
-        name: nginx 
-        state: started
-        enabled: yes
+    - name: Install Node.js and npm
+      apt:
+        name:
+          - nodejs
+        state: present
+
+    - name: Copy frontend application files
+      synchronize:
+        src: /path/to/local/frontend/
+        dest: /var/www/frontend/
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.git"
+          - "--exclude=README.md"
+
+    - name: Install frontend dependencies
+      ansible.builtin.shell: |
+        npm install
+      args:
+        chdir: /var/www/frontend
+
+    - name: Build the frontend application
+      ansible.builtin.shell: |
+        npm run build
+      args:
+        chdir: /var/www/frontend
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Configure Nginx for the frontend
+      ansible.builtin.template:
+        src: conf/nginx-frontend.conf.j2
+        dest: /etc/nginx/sites-available/frontend
+      notify:
+        - Restart Nginx
+
+    - name: Enable Nginx site configuration
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/frontend
+        dest: /etc/nginx/sites-enabled/frontend
+        state: link
+
+    - name: Remove default Nginx configuration
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
