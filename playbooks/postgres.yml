@@ -16,33 +16,34 @@
         enabled: yes
 
     - name: Create a PostgreSQL database
+      become: yes
       become_user: postgres
       postgresql_db:
         name: api
         state: present
 
-    - name: Create a PostgreSQL user
-      become_user: postgres
-      postgresql_user:
-        name: postgres
-        password: its
-        priv: "ALL"
-        state: present
+    # - name: Create a PostgreSQL user
+    #   become_user: postgres
+    #   postgresql_user:
+    #     name: postgres
+    #     password: its
+    #     priv: "ALL"
+    #     state: present
 
-    - name: Create a schema in the database
-      become_user: postgres
-      postgresql_query:
-        db: api
-        query: "CREATE SCHEMA IF NOT EXISTS api;"
+    # - name: Create a schema in the database
+    #   become_user: postgres
+    #   postgresql_query:
+    #     db: api
+    #     query: "CREATE SCHEMA IF NOT EXISTS api;"
 
-    - name: Create a table in the schema
-      become_user: postgres
-      postgresql_query:
-        db: api
-        query: |
-          CREATE TABLE IF NOT EXISTS api.users (
-              ID SERIAL PRIMARY KEY,
-              name VARCHAR(30),
-              email VARCHAR(30));
-          );
+    # - name: Create a table in the schema
+    #   become_user: postgres
+    #   postgresql_query:
+    #     db: api
+    #     query: |
+    #       CREATE TABLE IF NOT EXISTS api.users (
+    #           ID SERIAL PRIMARY KEY,
+    #           name VARCHAR(30),
+    #           email VARCHAR(30));
+    #       );
 
