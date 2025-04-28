@@ -1,0 +1,75 @@
+- name: Instalar y configurar el frontend
+  hosts: server1
+  become: yes
+
+  tasks:
+    - name: Configure Nginx for the backend
+      ansible.builtin.template:
+        src: conf/nginx-backend.conf.j2
+        dest: /etc/nginx/sites-available/backend
+      notify:
+        - Restart Nginx
+
+    - name: Enable Nginx site configuration
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/backend
+        dest: /etc/nginx/sites-enabled/backend
+        state: link
+
+    # Step 9: Remove default Nginx configuration
+    - name: Remove default Nginx configuration
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Install Rsync
+      apt:
+        name: 
+          - rsync
+        state: present
+
+    - name: Add Node.js repository
+      ansible.builtin.shell: |
+        curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+
+    - name: Install Node.js and npm
+      apt:
+        name: 
+          - nodejs
+        state: present
+
+    - name: Copy backend application files
+      synchronize:
+        src: /home/tarmairon/Documents/sistemas/8vo Semestre/DevOps/CN_api_bk/
+        dest: /var/www/CN_api_bk/
+        owner: true
+        group: true
+        mode: push
+        rsync_opts:
+        - "--exclude=.git"
+        - "--exclude=node_modules"
+        - "--exclude=Dockerfile"
+        - "--exclude=README.md"
+
+    # Step 3: Install application dependencies
+    - name: Install backend dependencies
+      ansible.builtin.shell: |
+        cd /var/www/CN_api_bk && npm install
+      args:
+        chdir: /var/www/CN_api_bk
+
+    # Step 4: Start the application using pm2
+    - name: Install pm2 globally
+      ansible.builtin.shell: npm install -g pm2
+
+    - name: Start the backend application with pm2
+      ansible.builtin.shell: |
+        pm2 start /var/www/CN_api_bk/index.js --name CN_api_bk
+        pm2 save
+        pm2 startup
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
