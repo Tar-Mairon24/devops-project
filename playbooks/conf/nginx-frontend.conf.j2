@@ -1,0 +1,12 @@
+server {
+    listen 80;
+
+    server_name your_domain_or_ip;
+
+    root /var/www/frontend/build;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
