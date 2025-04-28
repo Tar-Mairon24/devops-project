@@ -11,10 +11,12 @@ function InputPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost/users', {
-        method: 'POST',
-        headers: {
+      const response = await fetch('http://localhost:3000/users', {
+        'method': 'POST',
+        'mode': 'cors',
+        'headers': {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({ name, email }),
       });

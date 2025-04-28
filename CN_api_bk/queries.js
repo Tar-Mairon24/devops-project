@@ -34,26 +34,34 @@ const getUserById = (request, response) => {
 
 // POST
 const createUser = (request, response) => {
-    const { name, email } = request.body
+    const { name, email } = request.body;
 
+    // First query to get the last ID
     pool.query('SELECT MAX(id) AS last_id FROM users', (error, results) => {
         if (error) {
-            throw error
+            throw error;
         }
 
-        const lastId = results.rows[0].last_id || 0
-        const nextId = lastId + 1
-        console.log('Metod POST: createUser response: ', results.rows)
-    }
-    )
+        const lastId = results.rows[0]?.last_id || 0; // Get the last ID or default to 0
+        const nextId = lastId + 1; // Calculate the next ID
 
-    pool.query('INSERT INTO USERS (id, name, email) VALUES ($1, $2, $3) RETURNIG *', [nextId, name, email], (error, results) => {
-        if (error) {
-            throw error
-        }
-        response.status(201).send('Usuarios Agregados con ID: ${results.rows[0].id}')
-    })
-}
+        console.log('Metod POST: createUser response: ', results.rows);
+
+        // Second query to insert the new user
+        pool.query(
+            'INSERT INTO users (id, name, email) VALUES ($1, $2, $3) RETURNING *',
+            [nextId, name, email],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                response
+                    .status(201)
+                    .send(`User added with ID: ${results.rows[0].id}`);
+            }
+        );
+    });
+};
 
 // PUT
 
