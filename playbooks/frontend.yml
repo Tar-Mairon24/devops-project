@@ -36,7 +36,7 @@
 
     - name: Add Node.js repository
       ansible.builtin.shell: |
-        curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+        curl -fsSL https://deb.nodesource.com/setup_22.x  | bash -
 
     - name: Install Node.js and npm
       apt:
