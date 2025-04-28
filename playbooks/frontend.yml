@@ -4,6 +4,13 @@
 
   tasks: 
 
+    - name: Install Rsync
+      apt:
+        name: 
+          - rsync
+        state: present
+
+        
     - name: Add Node.js repository
       ansible.builtin.shell: |
         curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
