@@ -4,7 +4,7 @@ import './App.css'
 function App() {
   const [data, setData] = useState(null);
   useEffect(()=> {
-    fetch("http://129.80.95.120:3000/users",{ 
+    fetch("http://129.80.95.120/users",{ 
       'mode': 'cors',
       'headers': {
           'Access-Control-Allow-Origin': '*',
@@ -20,7 +20,7 @@ function App() {
       <div className='card'>
         <ul>
           {data?.map((user)=>(
-            <li key={user.id}>{user.name}</li>
+            <li key={user.id}>{user.name}, {user.email}</li>
           ))}
         </ul>
       </div>
