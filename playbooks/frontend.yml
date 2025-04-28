@@ -4,47 +4,6 @@
 
   tasks: 
 
-    - name: Install Rsync
-      apt:
-        name: 
-          - rsync
-        state: present
-
-        
-    - name: Add Node.js repository
-      ansible.builtin.shell: |
-        curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-
-    - name: Install Node.js and npm
-      apt:
-        name:
-          - nodejs
-        state: present
-
-    - name: Copy frontend application files
-      synchronize:
-        src: /path/to/local/frontend/
-        dest: /var/www/frontend/
-        owner: www-data
-        group: www-data
-        mode: '0755'
-        rsync_opts:
-          - "--exclude=node_modules"
-          - "--exclude=.git"
-          - "--exclude=README.md"
-
-    - name: Install frontend dependencies
-      ansible.builtin.shell: |
-        npm install
-      args:
-        chdir: /var/www/frontend
-
-    - name: Build the frontend application
-      ansible.builtin.shell: |
-        npm run build
-      args:
-        chdir: /var/www/frontend
-
     - name: Install Nginx
       apt:
         name: nginx
@@ -67,6 +26,48 @@
       ansible.builtin.file:
         path: /etc/nginx/sites-enabled/default
         state: absent
+
+    - name: Install Rsync
+      apt:
+        name: 
+          - rsync
+        state: present
+
+
+    - name: Add Node.js repository
+      ansible.builtin.shell: |
+        curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+
+    - name: Install Node.js and npm
+      apt:
+        name:
+          - nodejs
+        state: latest
+
+    - name: Copy frontend application files
+      synchronize:
+        src: ~/Documents/sistemas/8vo Semestre/DevOps/CN_React/
+        dest: /var/www/frontend/
+        owner: true
+        group: true
+        mode: push
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.git"
+          - "--exclude=README.md"
+          - "--exclude=Dockerfile"
+
+    - name: Install frontend dependencies
+      ansible.builtin.shell: |
+        npm install
+      args:
+        chdir: /var/www/frontend
+
+    - name: Build the frontend application
+      ansible.builtin.shell: |
+        npm run build
+      args:
+        chdir: /var/www/frontend
 
   handlers:
     - name: Restart Nginx
