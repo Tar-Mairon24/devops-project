@@ -36,7 +36,18 @@ const getUserById = (request, response) => {
 const createUser = (request, response) => {
     const { name, email } = request.body
 
-    pool.query('INSERT INTO USERS (name, email) VALUES ($1, $2) RETURNIG *', [name, email], (error, results) => {
+    pool.query('SELECT MAX(id) AS last_id FROM users', (error, results) => {
+        if (error) {
+            throw error
+        }
+
+        const lastId = results.rows[0].last_id || 0
+        const nextId = lastId + 1
+        console.log('Metod POST: createUser response: ', results.rows)
+    }
+    )
+
+    pool.query('INSERT INTO USERS (id, name, email) VALUES ($1, $2, $3) RETURNIG *', [nextId, name, email], (error, results) => {
         if (error) {
             throw error
         }

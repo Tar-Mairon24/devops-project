@@ -6,7 +6,7 @@ function App() {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
   useEffect(()=> {
-    fetch("http://129.80.95.120/users",{ 
+    fetch("http://localhost/users",{ 
       'mode': 'cors',
       'headers': {
           'Access-Control-Allow-Origin': '*',
