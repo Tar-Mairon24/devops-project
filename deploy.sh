@@ -5,6 +5,7 @@ echo "1. frontend"
 echo "2. backend"
 echo "3. database"
 echo "4. all"
+echo "5. nada"
 
 read -p "Enter the service to redeploy: " service
 
