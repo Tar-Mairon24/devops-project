@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './App.css'
 
 function App() {
   const [data, setData] = useState(null);
-  const navigate = useNavigate();
   useEffect(()=> {
-    fetch("http://129.80.95.120/users",{ 
+    fetch("http://localhost:3000/users",{ 
       'mode': 'cors',
       'headers': {
           'Access-Control-Allow-Origin': '*',
@@ -18,15 +16,14 @@ function App() {
   }, []);
   return (
     <div className='App'>
-      <h1>Users on database</h1>
+      <h1>Fetch</h1>
       <div className='card'>
         <ul>
           {data?.map((user)=>(
-            <li key={user.id}>{user.name}, {user.email}</li>
+            <li key={user.id}>{user.name}</li>
           ))}
         </ul>
       </div>
-      <button onClick={() => navigate('/input')}>Add Users</button>
     </div>
   );
 }
