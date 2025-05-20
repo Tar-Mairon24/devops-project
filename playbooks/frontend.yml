@@ -1,20 +1,82 @@
 - name: Instalar y configurar el frontend
-  hosts: servers
+  hosts: server2
   become: yes
 
   tasks: 
-    - name: Instalar Nginx
-      apt:
-        update: yes
-        upgrade: yes
-        #update_cache: yes
 
+    - name: Install Nginx
       apt:
-        name: nginx 
+        name: nginx
+        state: present
+
+    - name: Configure Nginx for the frontend
+      ansible.builtin.template:
+        src: conf/nginx-frontend.conf.j2
+        dest: /etc/nginx/sites-available/frontend
+      notify:
+        - Restart Nginx
+
+    - name: Enable Nginx site configuration
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/frontend
+        dest: /etc/nginx/sites-enabled/frontend
+        state: link
+
+    - name: Remove default Nginx configuration
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Install Rsync
+      apt:
+        name: 
+          - rsync
+        state: present
+
+
+    - name: Add Node.js repository
+      ansible.builtin.shell: |
+        curl -fsSL https://deb.nodesource.com/setup_22.x  | bash -
+
+    - name: Install Node.js and npm
+      apt:
+        name:
+          - nodejs
         state: latest
 
-    - name: Iniciar y habilitar Nginx 
-      service: 
-        name: nginx 
-        state: started
-        enabled: yes
+    - name: Copy frontend application files
+      synchronize:
+        src: ~/Documents/sistemas/8vo Semestre/DevOps/CN_React/
+        dest: /var/www/frontend/
+        owner: true
+        group: true
+        mode: push
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.git"
+          - "--exclude=README.md"
+          - "--exclude=Dockerfile"
+
+    - name: Install frontend dependencies
+      ansible.builtin.shell: |
+        npm install
+      args:
+        chdir: /var/www/frontend
+
+    - name: Build the frontend application
+      ansible.builtin.shell: |
+        npm run build
+      args:
+        chdir: /var/www/frontend
+
+    - name: Open port 80 using iptables
+      become: yes
+      ansible.builtin.shell: |
+        iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+        iptables-save > /etc/iptables/rules.v4
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
