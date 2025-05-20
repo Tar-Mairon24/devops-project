@@ -1,11 +1,11 @@
 const Pool = require('pg').Pool
 var fs = require('fs');
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "api",
-    password: "its",
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 })
 
 
@@ -34,34 +34,15 @@ const getUserById = (request, response) => {
 
 // POST
 const createUser = (request, response) => {
-    const { name, email } = request.body;
+    const { name, email } = request.body
 
-    // First query to get the last ID
-    pool.query('SELECT MAX(id) AS last_id FROM users', (error, results) => {
+    pool.query('INSERT INTO USERS (name, email) VALUES ($1, $2) RETURNIG *', [name, email], (error, results) => {
         if (error) {
-            throw error;
+            throw error
         }
-
-        const lastId = results.rows[0]?.last_id || 0; // Get the last ID or default to 0
-        const nextId = lastId + 1; // Calculate the next ID
-
-        console.log('Metod POST: createUser response: ', results.rows);
-
-        // Second query to insert the new user
-        pool.query(
-            'INSERT INTO users (id, name, email) VALUES ($1, $2, $3) RETURNING *',
-            [nextId, name, email],
-            (error, results) => {
-                if (error) {
-                    throw error;
-                }
-                response
-                    .status(201)
-                    .send(`User added with ID: ${results.rows[0].id}`);
-            }
-        );
-    });
-};
+        response.status(201).send('Usuarios Agregados con ID: ${results.rows[0].id}')
+    })
+}
 
 // PUT
 
