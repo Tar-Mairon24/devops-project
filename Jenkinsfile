@@ -11,12 +11,14 @@ node {
         sh 'npm -v'
     }
     stage('Deploy backend') {
-            def backendDir = 'docker'
-            dir(backendDir) {
-                echo "Building backend in directory: ${backendDir}"
-                sh 'docker compose -f backend.yml down'
-                sh 'docker compose -f backend.yml build'
-                sh 'docker compose -f backend.yml up -d'
+        def dockerDir = 'docker'
+        dir(dockerDir) {
+            sh 'ls -la'
+            echo "Current directory: ${env.WORKSPACE}/${dockerDir}"
+            echo "Building backend in directory: ${dockerDir}"
+            sh 'docker compose -f backend.yml down'
+            sh 'docker compose -f backend.yml build'
+            sh 'docker compose -f backend.yml up -d'
         }
     }
     stage('Deploy') {
