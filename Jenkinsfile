@@ -1,6 +1,17 @@
 node {
-    stage('Build') {
-        echo 'Building....'
+    stage('parameters') {
+        branch = env.BRANCH_NAME
+        echo "Branch name: ${branch}"
+        echo "Git commit: ${env.GIT_COMMIT}"
+        echo "Git commit message: ${env.GIT_COMMIT_MESSAGE}"
+        echo "Git author: ${env.GIT_AUTHOR}"
+        echo "Git author email: ${env.GIT_AUTHOR_EMAIL}"
+        echo "Git author name: ${env.GIT_AUTHOR_NAME}"
+        echo "Workspace: ${env.WORKSPACE}"
+    }
+    stage('checkout') {
+        echo "Checking out branch: ${branch}"
+        sh 'ls -la'
     }
     stage('node version') {
         echo "Node version: ${env.NODE_VERSION}"
