@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 node {
     stage('parameters') {
         branch = env.BRANCH_NAME
@@ -11,6 +13,7 @@ node {
     }
     stage('checkout') {
         echo "Checking out branch: ${branch}"
+        checkout scm
         sh 'ls -la'
     }
     stage('node version') {
