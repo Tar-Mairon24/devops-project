@@ -6,3 +6,5 @@ node_modules
 
 /getting-started-todo-app
 .aider*
+
+docker/.env
