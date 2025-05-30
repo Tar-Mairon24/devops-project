@@ -1,6 +1,6 @@
 services:
   backend: 
-    image: tarmairon24/backend:1.2
+    image: tarmairon24/backend:${imageVersion}
     container_name: backend
     restart: always
     environment:
