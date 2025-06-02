@@ -1,6 +1,6 @@
 - name: Instalar y configurar el frontend
   hosts: server1
-  become: yes
+  become: true
 
   tasks:
     - name: Configure Nginx for the backend
@@ -40,7 +40,7 @@
 
     - name: Copy backend application files
       synchronize:
-        src: /home/tarmairon/Documents/sistemas/8vo Semestre/DevOps/CN_api_bk/
+        src: ../CN_api_bk
         dest: /var/www/CN_api_bk/
         owner: true
         group: true
