@@ -1,7 +1,6 @@
 services:
   backend: 
-    image: tarmairon24/backend:1.2
-    container_name: backend
+    image: tarmairon24/backend:latest
     restart: always
     environment:
       DB_HOST: postgres
