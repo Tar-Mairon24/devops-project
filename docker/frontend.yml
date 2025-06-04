@@ -1,6 +1,6 @@
 services:
   frontend: 
-    image: tarmairon24/frontend:1.2
+    image: tarmairon24/frontend:latests
     container_name: frontend
     restart: always
     ports:
