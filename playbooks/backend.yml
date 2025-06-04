@@ -40,7 +40,7 @@
 
     - name: Copy backend application files
       synchronize:
-        src: ../CN_api_bk
+        src: ../CN_api_bk/
         dest: /var/www/CN_api_bk/
         owner: true
         group: true
