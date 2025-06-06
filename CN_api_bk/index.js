@@ -19,7 +19,7 @@ app.get('/', (request, response) => {
 	response.setHeader('Content-Type','application/json',
                     'Access-Control-Allow-Origin','*',
                     'Access-Control-Allow-Methods','POST,PATCH,OPTIONS',"Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept")
-    response.json({ info: 'Node.js, Express, and Postgre API'})
+    response.json({ info: 'Node.js, Express, and Postgre API Revision Final' })
 })
 
 // ends points

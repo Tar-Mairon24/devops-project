@@ -1,6 +1,6 @@
 - name: Instalar, configurar y habilitar Docker
   hosts: servers
-  become: yes
+  become: true
 
   tasks: 
 
